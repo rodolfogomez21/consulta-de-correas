@@ -12,7 +12,10 @@
       margin: auto;
       font-size: 18px;
     }
-    h3 { text-align: center; }
+    h3 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
     input, button {
       width: 100%;
       padding: 20px;
@@ -27,7 +30,9 @@
       border: none;
       cursor: pointer;
     }
-    button:hover { background: #1664c1; }
+    button:hover {
+      background: #1664c1;
+    }
     #resultado {
       margin-top: 20px;
       white-space: pre-line;
@@ -42,30 +47,39 @@
   <div id="resultado"></div>
 
   <script>
-    const urlAppScript = "https://script.google.com/macros/s/AKfycbz1iKW3A_007RAUBGsz0FqleCHNL461FW3WWv0qzvsm35GyOwqmzchNQqrdDyi8lWhy/exec"; // pega aquí la URL de tu Web App
+    // 👉 Pega aquí la URL de tu Web App publicada
+    const urlAppScript = "https://script.google.com/macros/s/AKfycbyvsXAdZnKEVsrUl7nXZ62MXxzh7kpPDlPjy0tPHrqSNlSqf6v3_GpKYIwVVtIJP978/exec";
+
     const btn = document.getElementById("btnConsultar");
     const input = document.getElementById("busqueda");
     const resultado = document.getElementById("resultado");
 
-    btn.addEventListener("click", async () => {
+    async function buscar() {
       const busqueda = input.value.trim();
       if (!busqueda) {
         resultado.textContent = "⚠️ Ingresa una marca o modelo";
         return;
       }
+
       resultado.textContent = "🔍 Buscando...";
+
       try {
+        // Llamada GET al App Script
         const res = await fetch(`${urlAppScript}?busqueda=${encodeURIComponent(busqueda)}`);
-        const data = await res.text(); // tu App Script devuelve texto
+        const data = await res.text(); // texto plano desde App Script
         resultado.textContent = data;
       } catch (e) {
         resultado.textContent = "❌ Error al consultar";
+        console.error(e);
       }
-    });
+    }
+
+    // Botón clic
+    btn.addEventListener("click", buscar);
 
     // Enter para buscar
     input.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") btn.click();
+      if (e.key === "Enter") buscar();
     });
   </script>
 </body>
