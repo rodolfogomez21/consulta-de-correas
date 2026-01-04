@@ -46,41 +46,32 @@
   <button id="btnConsultar">Consultar</button>
   <div id="resultado"></div>
 
-  <script>
-    // 👉 Pega aquí la URL de tu Web App publicada
-    const urlAppScript = "https://script.google.com/macros/s/AKfycbyvsXAdZnKEVsrUl7nXZ62MXxzh7kpPDlPjy0tPHrqSNlSqf6v3_GpKYIwVVtIJP978/exec";
+ <script>
+  const urlAppScript = "https://script.google.com/macros/s/AKfycbyUTYF6c3os9q58bYC7LDHH1KAKyTTJO6y5LEQMU9mGVwZlqXyqHNNEN8q0I8Xi6tFR7A/exec";
 
-    const btn = document.getElementById("btnConsultar");
-    const input = document.getElementById("busqueda");
-    const resultado = document.getElementById("resultado");
+  function mostrarResultados(data) {
+    document.getElementById("resultado").textContent = data;
+  }
 
-    async function buscar() {
-      const busqueda = input.value.trim();
-      if (!busqueda) {
-        resultado.textContent = "⚠️ Ingresa una marca o modelo";
-        return;
-      }
-
-      resultado.textContent = "🔍 Buscando...";
-
-      try {
-        // Llamada GET al App Script
-        const res = await fetch(`${urlAppScript}?busqueda=${encodeURIComponent(busqueda)}`);
-        const data = await res.text(); // texto plano desde App Script
-        resultado.textContent = data;
-      } catch (e) {
-        resultado.textContent = "❌ Error al consultar";
-        console.error(e);
-      }
+  function buscar() {
+    const busqueda = document.getElementById("busqueda").value.trim();
+    if (!busqueda) {
+      document.getElementById("resultado").textContent = "⚠️ Ingresa una marca o modelo";
+      return;
     }
 
-    // Botón clic
-    btn.addEventListener("click", buscar);
+    document.getElementById("resultado").textContent = "🔍 Buscando...";
 
-    // Enter para buscar
-    input.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") buscar();
-    });
-  </script>
-</body>
-</html>
+    // Crear etiqueta script dinámica para JSONP
+    const script = document.createElement("script");
+    script.src = `${urlAppScript}?busqueda=${encodeURIComponent(busqueda)}&callback=mostrarResultados`;
+    document.body.appendChild(script);
+
+    // El script se ejecuta automáticamente y llama a mostrarResultados
+  }
+
+  document.getElementById("btnConsultar").addEventListener("click", buscar);
+  document.getElementById("busqueda").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") buscar();
+  });
+</script>
