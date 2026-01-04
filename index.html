@@ -1,29 +1,89 @@
-<script>
-  const urlAppScript = "https://script.google.com/macros/s/AKfycbz1iKW3A_007RAUBGsz0FqleCHNL461FW3WWv0qzvsm35GyOwqmzchNQqrdDyi8lWhy/exec";
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consulta de Correas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+      font-size: 22px;
+    }
+    h3 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input, button {
+      width: 100%;
+      padding: 20px;
+      margin: 12px 0;
+      font-size: 22px;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+    button {
+      background: #1a73e8;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1664c1;
+    }
+    #resultado {
+      margin-top: 20px;
+      white-space: pre-line;
+      font-size: 20px;
+      word-wrap: break-word;
+    }
+    @media (max-width: 400px) {
+      body { padding: 15px; font-size: 18px; }
+      input, button { font-size: 18px; padding: 16px; }
+      #resultado { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <h3>Consulta de Correas</h3>
+  <input id="busqueda" placeholder="Marca o modelo (Ej: Mazda, Corolla)">
+  <button id="btnConsultar">Consultar</button>
+  <div id="resultado"></div>
 
-  function mostrarResultados(data) {
-    document.getElementById("resultado").textContent = data;
-  }
+  <script>
+    // URL de tu Web App de Apps Script
+    const urlAppScript = "https://script.google.com/macros/s/AKfycbz1iKW3A_007RAUBGsz0FqleCHNL461FW3WWv0qzvsm35GyOwqmzchNQqrdDyi8lWhy/exec";
 
-  function buscar() {
-    const busqueda = document.getElementById("busqueda").value.trim();
-    if (!busqueda) {
-      document.getElementById("resultado").textContent = "⚠️ Ingresa una marca o modelo";
-      return;
+    // Función que recibirá los resultados desde JSONP
+    function mostrarResultados(data) {
+      document.getElementById("resultado").textContent = data;
     }
 
-    document.getElementById("resultado").textContent = "🔍 Buscando...";
+    // Función de búsqueda
+    function buscar() {
+      const busqueda = document.getElementById("busqueda").value.trim();
+      const resultadoDiv = document.getElementById("resultado");
 
-    // Crear etiqueta script dinámica para JSONP
-    const script = document.createElement("script");
-    script.src = `${urlAppScript}?busqueda=${encodeURIComponent(busqueda)}&callback=mostrarResultados`;
-    document.body.appendChild(script);
+      if (!busqueda) {
+        resultadoDiv.textContent = "⚠️ Ingresa una marca o modelo";
+        return;
+      }
 
-    // El script se ejecuta automáticamente y llama a mostrarResultados
-  }
+      resultadoDiv.textContent = "🔍 Buscando...";
 
-  document.getElementById("btnConsultar").addEventListener("click", buscar);
-  document.getElementById("busqueda").addEventListener("keypress", (e) => {
-    if (e.key === "Enter") buscar();
-  });
-</script>
+      // Crear script dinámico para JSONP
+      const script = document.createElement("script");
+      script.src = `${urlAppScript}?busqueda=${encodeURIComponent(busqueda)}&callback=mostrarResultados`;
+      document.body.appendChild(script);
+    }
+
+    // Eventos
+    document.getElementById("btnConsultar").addEventListener("click", buscar);
+    document.getElementById("busqueda").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") buscar();
+    });
+  </script>
+</body>
+</html>
